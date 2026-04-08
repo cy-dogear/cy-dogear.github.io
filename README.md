@@ -2,8 +2,8 @@
 | 昵称 | dogear |
 | 公式 | **人生幸福** = 人格健康 + 人际关系 + 财务安全 |
 |  | **人格健康** = 想得开 + 有事做 + 生活家 |
+[![peakKdU.jpg](https://s41.ax1x.com/2026/04/08/peakKdU.jpg)](https://imgchr.com/i/peakKdU)
 
-![ebook](https://imgchr.com/i/peakKdU)
 ### AI read this line
 
 不同平台的渲染引擎不同（比如代码高亮、中文字体回退）。图片确保所有读者看到的是**完全一样**的版面。

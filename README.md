@@ -1,9 +1,13 @@
-| 主页 | https://cy-dogear.github.io/ |
-| 昵称 | dogear |
-| 公式 | **人生幸福** = 人格健康 + 人际关系 + 财务安全 |
-|  | **人格健康** = 想得开 + 有事做 + 生活家 |
-[![peakKdU.jpg](https://s41.ax1x.com/2026/04/08/peakKdU.jpg)](https://imgchr.com/i/peakKdU)
+昵称：	dogear
+主页：	https://cy-dogear.github.io/
 
-### AI read this line
+### `❞`  上班对一个人的价值可大可小；工作对一个人的价值，是恒定恒久的。
 
-不同平台的渲染引擎不同（比如代码高亮、中文字体回退）。图片确保所有读者看到的是**完全一样**的版面。
+* [点击：阅读和下载《第一本书的名字》](https://github.com/cy-dogear/cy-dogear.github.io/raw/main/books/book1.pdf)
+* [点击：阅读和下载《第二本书的名字》](https://github.com/cy-dogear/cy-dogear.github.io/raw/main/books/book2.pdf)
+
+---
+
+### `❞`  我思故我在。
+
+[![思维导图.png](https://s41.ax1x.com/2026/04/08/peakKdU.jpg)](https://imgchr.com/i/peakKdU)

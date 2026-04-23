@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>跳转提示</title>
+    <style>
+        /* 极简样式：只为了那行大字，无多余装饰 */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f7f6f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+        .big-text {
+            font-size: 3.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #2c5f2d;
+            text-align: center;
+            padding: 1rem;
+            background: transparent;
+            text-shadow: 0 1px 0 #e0e6d8;
+        }
+        @media (max-width: 480px) {
+            .big-text {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="big-text">将跳转</div>
+
+    <script>
+        (function() {
+            // ----- 配置 -----
+            const PRIMARY_URL = 'http://m3783e46.natappfree.cc';
+            const FALLBACK_URL = 'https://cy-dogear.github.io/dot2dot/helpme.html';
+            const DELAY_MS = 10000;        // 10 秒等待（明确展示“将跳转”大字）
+            const FETCH_TIMEOUT_MS = 5000;  // 检测主服务器是否异常的超时时间（5秒）
+
+            let isRedirectFinished = false;
+
+            function redirectTo(url) {
+                if (isRedirectFinished) return;
+                isRedirectFinished = true;
+                window.location.href = url;
+            }
+
+            // 检测主服务器是否真正「反馈异常」
+            // 返回 promise: true -> 主站可用, false -> 异常（网络/超时/非2xx状态等）
+            function checkPrimaryServer() {
+                return new Promise((resolve) => {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+                    fetch(PRIMARY_URL, {
+                        method: 'HEAD',      // 轻量探测，只获取响应头
+                        signal: controller.signal,
+                        cache: 'no-store',
+                        headers: { 'Cache-Control': 'no-cache' }
+                    })
+                    .then(response => {
+                        clearTimeout(timeoutId);
+                        // 只要状态码是 2xx 或 3xx 都认为服务器反馈正常（非异常）
+                        if (response.ok || (response.status >= 200 && response.status < 400)) {
+                            resolve(true);
+                        } else {
+                            // 例如 404, 500, 502, 503 等 -> 异常
+                            resolve(false);
+                        }
+                    })
+                    .catch(err => {
+                        clearTimeout(timeoutId);
+                        // 网络错误、超时、DNS失败、Tunnel not found 等全部视为异常
+                        resolve(false);
+                    });
+                });
+            }
+
+            // 核心流程: 先等待10秒 (展示大字) → 检测主服务器 → 根据结果跳转
+            setTimeout(async () => {
+                // 检测主服务器是否可用
+                const isPrimaryAlive = await checkPrimaryServer();
+                if (isPrimaryAlive) {
+                    // 服务器反馈正常 → 跳转到主站
+                    redirectTo(PRIMARY_URL);
+                } else {
+                    // 服务器反馈异常 (包括隧道不存在、超时、5xx等) → 转向备用 help 页面
+                    redirectTo(FALLBACK_URL);
+                }
+            }, DELAY_MS);
+        })();
+    </script>
+</body>
+</html>

@@ -11,109 +11,101 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: system-ui, sans-serif;
         }
-        .container {
-            text-align: center;
-            padding: 2rem;
-        }
-        .big-text {
-            font-size: 3.2rem;
-            font-weight: 600;
-            color: #2c5f2d;
-            margin-bottom: 1rem;
-        }
-        .countdown {
-            font-size: 1.2rem;
-            color: #666;
-            margin-top: 1rem;
-        }
-        @media (max-width: 480px) {
-            .big-text { font-size: 2.2rem; }
-        }
+        .container { text-align: center; padding: 2rem; }
+        .big-text { font-size: 3rem; font-weight: 600; color: #2c5f2d; }
+        .countdown { font-size: 1.2rem; color: #666; margin-top: 1rem; }
+        .status { font-size: 0.9rem; color: #999; margin-top: 1rem; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="big-text">即将跳转</div>
-        <div class="countdown">请稍候 <span id="counter">10</span> 秒</div>
+        <div class="big-text">⏳ 检测中...</div>
+        <div class="countdown">正在确认目标服务状态</div>
+        <div class="status" id="status"></div>
     </div>
 
     <script>
         (function() {
             const PRIMARY_URL = 'http://m3783e46.natappfree.cc';
             const FALLBACK_URL = 'https://cy-dogear.github.io/dot2dot/helpme.html';
-            const DELAY_MS = 10000;
-            const FETCH_TIMEOUT_MS = 5000;
-
-            let redirected = false;
-            let countdown = 10;
-            const counterEl = document.getElementById('counter');
-
-            // 倒计时显示
-            const timer = setInterval(() => {
-                countdown--;
-                if (counterEl) counterEl.textContent = countdown;
-                if (countdown <= 0) clearInterval(timer);
-            }, 1000);
-
-            function doRedirect(url) {
-                if (redirected) return;
-                redirected = true;
-                window.location.href = url;
+            const FETCH_TIMEOUT = 5000;
+            
+            // login.html 的特征指纹
+            const EXPECTED_FINGERPRINTS = [
+                '<title>Dot2Dot · 登录</title>',
+                '<h1>Dot2Dot</h1>',
+                '找得到点对点的连接，看得见精神生活内容',
+                'Login / Register',
+                'Visitor Mode'
+            ];
+            
+            const statusEl = document.getElementById('status');
+            
+            function updateStatus(msg) {
+                if (statusEl) statusEl.textContent = msg;
+                console.log(msg);
             }
-
-            async function checkPrimaryServer() {
+            
+            async function verifyPrimaryServer() {
+                updateStatus('🔍 正在探测主站...');
+                
                 try {
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
+                    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+                    
                     const response = await fetch(PRIMARY_URL, {
                         method: 'GET',
                         signal: controller.signal,
                         cache: 'no-store'
                     });
-
-                    clearTimeout(timeoutId);
-
-                    // 状态码非2xx即失败
-                    if (!response.ok) return false;
-
-                    // 读取内容检测错误关键词
-                    const text = await response.text();
-                    const lowerText = text.toLowerCase();
                     
-                    const errorKeywords = [
-                        'tunnel not found',
-                        'no such tunnel',
-                        'bad gateway',
-                        'service unavailable',
-                        'connection refused',
-                        '404 not found',
-                        '502 bad gateway',
-                        '503 service unavailable'
-                    ];
-
-                    for (const keyword of errorKeywords) {
-                        if (lowerText.includes(keyword)) {
-                            return false;
+                    clearTimeout(timeoutId);
+                    
+                    if (!response.ok) {
+                        updateStatus(`❌ HTTP 错误: ${response.status}`);
+                        return false;
+                    }
+                    
+                    const html = await response.text();
+                    let matchCount = 0;
+                    
+                    for (const fingerprint of EXPECTED_FINGERPRINTS) {
+                        if (html.includes(fingerprint)) {
+                            matchCount++;
                         }
                     }
-
-                    return true;
+                    
+                    updateStatus(`📊 特征匹配: ${matchCount}/${EXPECTED_FINGERPRINTS.length}`);
+                    
+                    // 至少匹配 3 个特征才认为是真正的 login.html
+                    const isValid = matchCount >= 3;
+                    
+                    if (isValid) {
+                        updateStatus('✅ 主站验证通过，即将跳转');
+                    } else {
+                        updateStatus('⚠️ 主站响应异常（非预期内容），转向备用');
+                    }
+                    
+                    return isValid;
+                    
                 } catch (err) {
+                    updateStatus(`❌ 连接失败: ${err.message}`);
                     return false;
                 }
             }
-
-            setTimeout(async () => {
-                const isAlive = await checkPrimaryServer();
-                if (isAlive) {
-                    doRedirect(PRIMARY_URL);
-                } else {
-                    doRedirect(FALLBACK_URL);
-                }
-            }, DELAY_MS);
+            
+            // 立即检测并跳转（不加延迟，因为用户等不了太久）
+            verifyPrimaryServer().then(isValid => {
+                setTimeout(() => {
+                    if (isValid) {
+                        window.location.href = PRIMARY_URL;
+                    } else {
+                        window.location.href = FALLBACK_URL;
+                    }
+                }, 1500); // 留 1.5 秒让用户看到检测结果
+            });
         })();
     </script>
 </body>

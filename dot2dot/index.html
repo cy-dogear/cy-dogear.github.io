@@ -27,49 +27,30 @@
     </div>
 
     <script>
-        // ==================== 全局配置变量 ====================
-        // 第1优先级：主站完整地址
+        // ==================== 全局配置 ====================
         const URL_1ST = 'http://t7fea69d.natappfree.cc';
-        
-        // 第2优先级：备用地址
         const URL_2ND = 'https://cy-dogear.github.io/dot2dot/helpme.html';
-        
-        // 第3优先级：最终备用地址（当1st和2nd都不可用时）
         const URL_3RD = 'https://mcnugbhskyip.feishu.cn/wiki/AH24wD2XEi2fN3krrOLcG3vqnvh?from=from_copylink';
         
-        // 检查 HTML 中的特定文本特征（核心判断依据）
-        // 只要响应体中包含此字符串，即认为主站可用
-        const CHECK_CHARACTER = 'Dot2Dot';
+        const VERIFY_1ST = 'Dot2Dot-Login-Page-Check';
+        const VERIFY_2ND = 'Dot2Dot-Help-Page-Check';
         
-        // 超时时间（毫秒）
+        
         const FETCH_TIMEOUT = 5000;
-        
-        // 跳转前的等待时间（毫秒），让用户看到检测结果
         const REDIRECT_DELAY = 1500;
         // ==================== 配置结束 ====================
 
         const statusEl = document.getElementById('status');
         
-        function updateStatus(msg, isError = false) {
-            if (statusEl) {
-                statusEl.textContent = msg;
-                if (isError) {
-                    statusEl.style.color = '#c0392b';
-                } else {
-                    statusEl.style.color = '#999';
-                }
-            }
+        function updateStatus(msg) {
+            if (statusEl) statusEl.textContent = msg;
             console.log(msg);
         }
         
-        /**
-         * 检测单个URL是否可用
-         * @param {string} url 要检测的URL
-         * @returns {Promise<boolean>} 是否可用（响应体包含 CHECK_CHARACTER）
-         */
-        async function checkUrl(url) {
+        async function checkUrl(url, verifyString) {
+            updateStatus(`🔍 检测: ${url}`);
+            
             try {
-                // 使用 AbortSignal.timeout 简化超时逻辑
                 const response = await fetch(url, {
                     method: 'GET',
                     signal: AbortSignal.timeout(FETCH_TIMEOUT),
@@ -77,77 +58,35 @@
                 });
                 
                 if (!response.ok) {
-                    updateStatus(`❌ HTTP ${response.status}: ${url}`);
+                    updateStatus(`❌ HTTP ${response.status}`);
                     return false;
                 }
                 
                 const html = await response.text();
+                const isValid = html.includes(verifyString);
                 
-                // 检查是否包含指定特征字符串
-                const isValid = html.includes(CHECK_CHARACTER);
-                
-                if (isValid) {
-                    updateStatus(`✅ 验证通过: ${url}`);
-                } else {
-                    updateStatus(`⚠️ 响应中未找到特征字符串 "${CHECK_CHARACTER}"`);
-                }
-                
+                updateStatus(isValid ? `✅ 验证通过` : `⚠️ 未找到验证字符串`);
                 return isValid;
                 
             } catch (err) {
-                // 区分超时错误和其他网络错误
-                if (err.name === 'TimeoutError') {
-                    updateStatus(`⏰ 超时: ${url}`);
-                } else {
-                    updateStatus(`❌ 连接失败: ${err.message}`);
-                }
+                updateStatus(`❌ ${err.name === 'TimeoutError' ? '超时' : err.message}`);
                 return false;
             }
         }
         
-        /**
-         * 主检测逻辑：按优先级依次检测
-         * @returns {Promise<string|null>} 可用的URL，若全不可用返回null
-         */
-        async function findAvailableUrl() {
-            // 检测第一个URL
-            updateStatus(`🔍 正在探测主站: ${URL_1ST}`);
-            if (await checkUrl(URL_1ST)) {
-                return URL_1ST;
-            }
-            
-            // 第一个不可用，检测第二个
-            updateStatus(`🔍 主站不可用，尝试备用: ${URL_2ND}`);
-            if (await checkUrl(URL_2ND)) {
-                return URL_2ND;
-            }
-            
-            // 第二个也不可用，尝试第三个
-            updateStatus(`🔍 备用站不可用，尝试最终备用: ${URL_3RD}`);
-            if (await checkUrl(URL_3RD)) {
-                return URL_3RD;
-            }
-            
-            // 全部不可用
-            return null;
-        }
-        
-        // 执行检测并跳转
         (async function() {
-            const availableUrl = await findAvailableUrl();
+            let targetUrl = null;
+            
+            if (await checkUrl(URL_1ST, VERIFY_1ST)) targetUrl = URL_1ST;
+            else if (await checkUrl(URL_2ND, VERIFY_2ND)) targetUrl = URL_2ND;
+            else if (await checkUrl(URL_3RD, VERIFY_3RD)) targetUrl = URL_3RD;
             
             setTimeout(() => {
-                if (availableUrl) {
-                    updateStatus(`🚀 即将跳转到: ${availableUrl}`);
-                    window.location.href = availableUrl;
+                if (targetUrl) {
+                    window.location.href = targetUrl;
                 } else {
-                    updateStatus(`💀 所有服务均不可用，请检查网络或联系管理员`, true);
-                    // 可选：在控制台输出详细信息
-                    console.error('检测失败: 所有URL均不可用');
-                    console.error('URL_1ST:', URL_1ST);
-                    console.error('URL_2ND:', URL_2ND);
-                    console.error('URL_3RD:', URL_3RD);
-                    console.error('CHECK_CHARACTER:', CHECK_CHARACTER);
+                    updateStatus('💀 所有服务均不可用');
+                    statusEl.style.color = '#c0392b';
                 }
             }, REDIRECT_DELAY);
         })();

@@ -27,85 +27,129 @@
     </div>
 
     <script>
-        (function() {
-            const PRIMARY_URL = 't7fea69d.natappfree.cc';
-            const FALLBACK_URL = 'https://cy-dogear.github.io/dot2dot/helpme.html';
-            const FETCH_TIMEOUT = 5000;
-            
-            // login.html 的特征指纹
-            const EXPECTED_FINGERPRINTS = [
-                '<title>Dot2Dot · 登录</title>',
-                '<h1>Dot2Dot</h1>',
-                '找得到点对点的连接，看得见精神生活内容',
-                'Login / Register',
-                'Visitor Mode'
-            ];
-            
-            const statusEl = document.getElementById('status');
-            
-            function updateStatus(msg) {
-                if (statusEl) statusEl.textContent = msg;
-                console.log(msg);
-            }
-            
-            async function verifyPrimaryServer() {
-                updateStatus('🔍 正在探测主站...');
-                
-                try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
-                    
-                    const response = await fetch(PRIMARY_URL, {
-                        method: 'GET',
-                        signal: controller.signal,
-                        cache: 'no-store'
-                    });
-                    
-                    clearTimeout(timeoutId);
-                    
-                    if (!response.ok) {
-                        updateStatus(`❌ HTTP 错误: ${response.status}`);
-                        return false;
-                    }
-                    
-                    const html = await response.text();
-                    let matchCount = 0;
-                    
-                    for (const fingerprint of EXPECTED_FINGERPRINTS) {
-                        if (html.includes(fingerprint)) {
-                            matchCount++;
-                        }
-                    }
-                    
-                    updateStatus(`📊 特征匹配: ${matchCount}/${EXPECTED_FINGERPRINTS.length}`);
-                    
-                    // 至少匹配 3 个特征才认为是真正的 login.html
-                    const isValid = matchCount >= 3;
-                    
-                    if (isValid) {
-                        updateStatus('✅ 主站验证通过，即将跳转');
-                    } else {
-                        updateStatus('⚠️ 主站响应异常（非预期内容），转向备用');
-                    }
-                    
-                    return isValid;
-                    
-                } catch (err) {
-                    updateStatus(`❌ 连接失败: ${err.message}`);
-                    return false;
+        // ==================== 全局配置变量 ====================
+        // 第1优先级：主站完整地址
+        const URL_1ST = 'http://t7fea69d.natappfree.cc';
+        
+        // 第2优先级：备用地址
+        const URL_2ND = 'https://cy-dogear.github.io/dot2dot/helpme.html';
+        
+        // 第3优先级：最终备用地址（当1st和2nd都不可用时）
+        const URL_3RD = 'https://www.baidu.com';
+        
+        // 检查 HTML 中的特定文本特征（核心判断依据）
+        // 只要响应体中包含此字符串，即认为主站可用
+        const CHECK_CHARACTER = 'Dot2Dot';
+        
+        // 超时时间（毫秒）
+        const FETCH_TIMEOUT = 5000;
+        
+        // 跳转前的等待时间（毫秒），让用户看到检测结果
+        const REDIRECT_DELAY = 1500;
+        // ==================== 配置结束 ====================
+
+        const statusEl = document.getElementById('status');
+        
+        function updateStatus(msg, isError = false) {
+            if (statusEl) {
+                statusEl.textContent = msg;
+                if (isError) {
+                    statusEl.style.color = '#c0392b';
+                } else {
+                    statusEl.style.color = '#999';
                 }
             }
+            console.log(msg);
+        }
+        
+        /**
+         * 检测单个URL是否可用
+         * @param {string} url 要检测的URL
+         * @returns {Promise<boolean>} 是否可用（响应体包含 CHECK_CHARACTER）
+         */
+        async function checkUrl(url) {
+            try {
+                // 使用 AbortSignal.timeout 简化超时逻辑
+                const response = await fetch(url, {
+                    method: 'GET',
+                    signal: AbortSignal.timeout(FETCH_TIMEOUT),
+                    cache: 'no-store'
+                });
+                
+                if (!response.ok) {
+                    updateStatus(`❌ HTTP ${response.status}: ${url}`);
+                    return false;
+                }
+                
+                const html = await response.text();
+                
+                // 检查是否包含指定特征字符串
+                const isValid = html.includes(CHECK_CHARACTER);
+                
+                if (isValid) {
+                    updateStatus(`✅ 验证通过: ${url}`);
+                } else {
+                    updateStatus(`⚠️ 响应中未找到特征字符串 "${CHECK_CHARACTER}"`);
+                }
+                
+                return isValid;
+                
+            } catch (err) {
+                // 区分超时错误和其他网络错误
+                if (err.name === 'TimeoutError') {
+                    updateStatus(`⏰ 超时: ${url}`);
+                } else {
+                    updateStatus(`❌ 连接失败: ${err.message}`);
+                }
+                return false;
+            }
+        }
+        
+        /**
+         * 主检测逻辑：按优先级依次检测
+         * @returns {Promise<string|null>} 可用的URL，若全不可用返回null
+         */
+        async function findAvailableUrl() {
+            // 检测第一个URL
+            updateStatus(`🔍 正在探测主站: ${URL_1ST}`);
+            if (await checkUrl(URL_1ST)) {
+                return URL_1ST;
+            }
             
-            // 立即检测并跳转（不加延迟，因为用户等不了太久）
-            verifyPrimaryServer().then(isValid => {
-                setTimeout(() => {
-                    if (isValid) {
-                        window.location.href = PRIMARY_URL;
-                    } else {
-                        window.location.href = FALLBACK_URL;
-                    }
-                }, 1500); // 留 1.5 秒让用户看到检测结果
-            });
+            // 第一个不可用，检测第二个
+            updateStatus(`🔍 主站不可用，尝试备用: ${URL_2ND}`);
+            if (await checkUrl(URL_2ND)) {
+                return URL_2ND;
+            }
+            
+            // 第二个也不可用，尝试第三个
+            updateStatus(`🔍 备用站不可用，尝试最终备用: ${URL_3RD}`);
+            if (await checkUrl(URL_3RD)) {
+                return URL_3RD;
+            }
+            
+            // 全部不可用
+            return null;
+        }
+        
+        // 执行检测并跳转
+        (async function() {
+            const availableUrl = await findAvailableUrl();
+            
+            setTimeout(() => {
+                if (availableUrl) {
+                    updateStatus(`🚀 即将跳转到: ${availableUrl}`);
+                    window.location.href = availableUrl;
+                } else {
+                    updateStatus(`💀 所有服务均不可用，请检查网络或联系管理员`, true);
+                    // 可选：在控制台输出详细信息
+                    console.error('检测失败: 所有URL均不可用');
+                    console.error('URL_1ST:', URL_1ST);
+                    console.error('URL_2ND:', URL_2ND);
+                    console.error('URL_3RD:', URL_3RD);
+                    console.error('CHECK_CHARACTER:', CHECK_CHARACTER);
+                }
+            }, REDIRECT_DELAY);
         })();
     </script>
 </body>

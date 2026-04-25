@@ -14,4 +14,4 @@ Current status assessment:
 # Please help me:
 If you have any ideas or resources to improve Dot2Dot, please take a minute to let me know.
 
-•✉• **Admin Address:** chenear@163.com
+•✉• **Admin Address:** dot2dot@189.cn

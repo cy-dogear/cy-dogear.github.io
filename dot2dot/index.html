@@ -48,9 +48,9 @@
         <div class="countdown">正在确认目标服务状态</div>
         <div class="status" id="status"></div>
         <br>
-        <a id="directReload" rel="noopener noreferrer" style="text-decoration: none;">☞ Manual Direct Reload</a>
-        <br><br>
-        <a href="https://cy-dogear.github.io/dot2dot/helpme.html" rel="noopener noreferrer" style="text-decoration: none;">☞ Goto Help</a>
+        <a id="directReload" rel="noopener noreferrer" >☞ Manual Reset</a><br>
+        <a>or</a><br>
+        <a href="https://cy-dogear.github.io/dot2dot/helpme.html" rel="noopener noreferrer" >☞ Goto Help</a>
  
     </div>
 
@@ -117,7 +117,7 @@
             // 限制循环次数检查（必须在 targetUrl 声明之前）
             let loopCount = parseInt(sessionStorage.getItem('dot2dot_loop') || '0');
             if (loopCount >= 1) {
-                updateStatus(`⚠️ Please click "Manual Direct Reload"`);
+                updateStatus(`⚠️ Manual Reset is recommended ...`);
                 sessionStorage.removeItem('dot2dot_loop');
                 setTimeout(() => {
                     window.location.href = URL_3RD;

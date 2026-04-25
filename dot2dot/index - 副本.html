@@ -30,14 +30,22 @@
         // ==================== 全局配置 ====================
         const URL_1ST = 'http://t7fea69d.natappfree.cc';
         const URL_2ND = 'https://cy-dogear.github.io/dot2dot/helpme.html';
-        const URL_3RD = 'https://mcnugbhskyip.feishu.cn/wiki/AH24wD2XEi2fN3krrOLcG3vqnvh?from=from_copylink';
-        
-        const VERIFY_1ST = 'Dot2Dot-Login-Page-Check';
-        const VERIFY_2ND = 'Dot2Dot-Help-Page-Check';
-        
-        
-        const FETCH_TIMEOUT = 5000;
-        const REDIRECT_DELAY = 1500;
+        const URL_3RD = 'https://cy-dogear.github.io/dot2dot/index.html';
+
+        const VERIFY_1 = 'not found';
+        const VERIFY_2 = 'Dot2Dot-Login-Page-Check';
+
+        // >>> 插入1：限制检查（放在这里）<<<
+        let loopCount = parseInt(sessionStorage.getItem('dot2dot_loop') || '0');
+        if (loopCount >= 2) {
+            targetUrl = URL_2ND;
+            sessionStorage.removeItem('dot2dot_loop');
+            window.location.href = targetUrl;
+            throw new Error('Loop limit reached');
+        }
+                
+        const FETCH_TIMEOUT = 2000;
+        const REDIRECT_DELAY = 2000;
         // ==================== 配置结束 ====================
 
         const statusEl = document.getElementById('status');
@@ -77,9 +85,15 @@
         (async function() {
             let targetUrl = null;
             
-            if (await checkUrl(URL_1ST, VERIFY_1ST)) targetUrl = URL_1ST;
-            else if (await checkUrl(URL_2ND, VERIFY_2ND)) targetUrl = URL_2ND;
-            else if (await checkUrl(URL_3RD, VERIFY_3RD)) targetUrl = URL_3RD;
+            if (await checkUrl(URL_1ST, VERIFY_1)) targetUrl = URL_2ND;
+            else if (await checkUrl(URL_1ST, VERIFY_2)) targetUrl = URL_1ST;
+            else {
+                // >>> 插入2：循环计数（放在 else 里，跳转前）<<<
+                sessionStorage.setItem('dot2dot_loop', loopCount + 1);
+                targetUrl = URL_3RD;
+                }
+
+            window.location.href = targetUrl;
             
             setTimeout(() => {
                 if (targetUrl) {

@@ -19,7 +19,7 @@
         .status { font-size: 0.9rem; color: #999; margin-top: 1rem; }
     </style>
 
-        <!-- ========== SEO / 机器检索增强 ========== -->
+    <!-- ========== SEO / 机器检索增强 ========== -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
     <meta name="description" content="Dot2Dot - email-based connection platform for meaningful friendship. AI-algorithmic social media for authentic relationships.">
@@ -47,21 +47,22 @@
         <div class="big-text">⏳ 检测中...</div>
         <div class="countdown">正在确认目标服务状态</div>
         <div class="status" id="status"></div>
-        <br><a href="https://cy-dogear.github.io/dot2dot/helpme.html"  rel="noopener noreferrer" >☞ Goto Help </a>
+        <br>
+        <a href="https://cy-dogear.github.io/dot2dot/helpme.html" rel="noopener noreferrer" style="text-decoration: none;">☞ Goto Help</a>
     </div>
 
     <script>
         // ==================== 全局配置 ====================
         const URL_1ST = 'http://t7fea69d.natappfree.cc';
         const URL_2ND = 'https://cy-dogear.github.io/dot2dot/helpme.html';
-        const URL_3RD = 'https://mcnugbhskyip.feishu.cn/wiki/AH24wD2XEi2fN3krrOLcG3vqnvh?from=from_copylink';
+        const URL_3RD = 'https://cy-dogear.github.io/dot2dot/index.html';
+
+        const VERIFY_1 = 'not found';
+        const VERIFY_2 = 'Dot2Dot-Login-Page-Check';
         
-        const VERIFY_1ST = 'Dot2Dot-Login-Page-Check';
-        const VERIFY_2ND = 'Dot2Dot-Help-Page-Check';
-        
-        
-        const FETCH_TIMEOUT = 50;
-        const REDIRECT_DELAY = 1500;
+        const FETCH_TIMEOUT = 5000;      // 5秒超时
+        const REDIRECT_DELAY = 1500;     // 1.5秒后跳转
+
         // ==================== 配置结束 ====================
 
         const statusEl = document.getElementById('status');
@@ -75,11 +76,16 @@
             updateStatus(`🔍 检测: ${url}`);
             
             try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+                
                 const response = await fetch(url, {
                     method: 'GET',
-                    signal: AbortSignal.timeout(FETCH_TIMEOUT),
+                    signal: controller.signal,
                     cache: 'no-store'
                 });
+                
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     updateStatus(`❌ HTTP ${response.status}`);
@@ -93,21 +99,46 @@
                 return isValid;
                 
             } catch (err) {
-                updateStatus(`❌ ${err.name === 'TimeoutError' ? '超时' : err.message}`);
+                if (err.name === 'AbortError') {
+                    updateStatus(`❌ 超时`);
+                } else {
+                    updateStatus(`❌ ${err.message}`);
+                }
                 return false;
             }
         }
         
         (async function() {
+            // 限制循环次数检查（必须在 targetUrl 声明之前）
+            let loopCount = parseInt(sessionStorage.getItem('dot2dot_loop') || '0');
+            if (loopCount >= 2) {
+                updateStatus(`⚠️ 已达循环上限 (${loopCount}/2)，跳转备用地址`);
+                sessionStorage.removeItem('dot2dot_loop');
+                setTimeout(() => {
+                    window.location.href = URL_2ND;
+                }, REDIRECT_DELAY);
+                return;  // 退出，不继续执行
+            }
+            
+            let targetUrl = null;
+            
+            if (await checkUrl(URL_1ST, VERIFY_1)) {
+                targetUrl = URL_2ND;
+            } else if (await checkUrl(URL_1ST, VERIFY_2)) {
+                targetUrl = URL_1ST;
+            } else {
+                // 循环计数：只有进入兜底分支时才累加
+                sessionStorage.setItem('dot2dot_loop', loopCount + 1);
+                targetUrl = URL_3RD;
+            }
 
-            let targetUrl = URL_1ST;
-                        
+            // 延迟跳转，让用户看到检测结果
             setTimeout(() => {
                 if (targetUrl) {
                     window.location.href = targetUrl;
                 } else {
                     updateStatus('💀 所有服务均不可用');
-                    statusEl.style.color = '#c0392b';
+                    if (statusEl) statusEl.style.color = '#c0392b';
                 }
             }, REDIRECT_DELAY);
         })();

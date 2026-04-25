@@ -98,8 +98,11 @@
         }
         
         (async function() {
-            let targetUrl = URL_1ST;
+            let targetUrl = null;
             
+            if (await checkUrl(URL_1ST, VERIFY_1ST)) targetUrl = URL_1ST;
+            else if (await checkUrl(URL_2ND, VERIFY_2ND)) targetUrl = URL_2ND;
+            else if (await checkUrl(URL_3RD, VERIFY_3RD)) targetUrl = URL_3RD;
             
             setTimeout(() => {
                 if (targetUrl) {

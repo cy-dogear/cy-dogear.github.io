@@ -47,6 +47,7 @@
         <div class="big-text">⏳ 检测中...</div>
         <div class="countdown">正在确认目标服务状态</div>
         <div class="status" id="status"></div>
+        <br><a href="https://cy-dogear.github.io/dot2dot/helpme.html"  rel="noopener noreferrer" >☞ Goto Help </a>
     </div>
 
     <script>
@@ -59,7 +60,7 @@
         const VERIFY_2ND = 'Dot2Dot-Help-Page-Check';
         
         
-        const FETCH_TIMEOUT = 5000;
+        const FETCH_TIMEOUT = 50;
         const REDIRECT_DELAY = 1500;
         // ==================== 配置结束 ====================
 
@@ -98,9 +99,9 @@
         }
         
         (async function() {
+
             let targetUrl = URL_1ST;
-            
-            
+                        
             setTimeout(() => {
                 if (targetUrl) {
                     window.location.href = targetUrl;

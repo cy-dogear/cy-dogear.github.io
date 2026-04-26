@@ -59,13 +59,13 @@
         // ==================== 全局配置 ====================
         const URL_1ST = 'http://xaa83d83.natappfree.cc';
         const URL_2ND = 'https://cy-dogear.github.io/dot2dot/helpme.html';
-        const URL_3RD = 'https://cy-dogear.github.io/dot2dot/index.html';
+        const URL_3RD = './index.html';
 
         const VERIFY_1 = 'not found';
         const VERIFY_2 = 'Dot2Dot-Login-Page-Check';
         
         const FETCH_TIMEOUT = 5000;      // 5秒超时
-        const RETRY_DELAY = 3000;        // 5秒重试间隔
+        const RETRY_DELAY = 5000;        // 重试间隔
 
         // ==================== 配置结束 ====================
 
@@ -174,7 +174,7 @@
             
             setTimeout(() => {
                 window.location.href = URL_2ND;
-            }, 1500);
+            }, RETRY_DELAY);
         })();
     </script>
 </body>

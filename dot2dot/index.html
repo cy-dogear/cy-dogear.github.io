@@ -65,7 +65,7 @@
         const VERIFY_2 = 'Dot2Dot-Login-Page-Check';
         
         const FETCH_TIMEOUT = 5000;      // 5秒超时
-        const RETRY_DELAY = 5000;        // 重试间隔
+        const RETRY_DELAY = 4000;        // 重试间隔
 
         // ==================== 配置结束 ====================
 
@@ -167,11 +167,10 @@
                     await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
                 }
             }
+                
+            updateRetryInfo(`⚠️ You're recommended to click "Manual Reset" ... (${LOOP_MAX}/${LOOP_MAX})`);
             
-            // 循环结束，所有尝试均失败，跳转 URL2
-            updateStatus(`⚠️ ${LOOP_MAX} 次尝试均失败`);
-            updateRetryInfo(`📋 最后错误: ${lastError}`);
-            
+            // 循环结束，所有尝试均失败，跳转 URL2之间再DELAY最后一次
             setTimeout(() => {
                 window.location.href = URL_2ND;
             }, RETRY_DELAY);

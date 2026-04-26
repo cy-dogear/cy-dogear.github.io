@@ -49,6 +49,7 @@
         <div class="countdown">正在确认目标服务状态</div>
         <div class="status" id="status"></div>
         <div class="retry-info" id="retryInfo"></div>
+        
         <br>
         <a id="directReload" rel="noopener noreferrer" >☞ Manual Reset</a><br>
         <a>or</a><br>
@@ -57,7 +58,7 @@
 
     <script>
         // ==================== 全局配置 ====================
-        const URL_1ST = 'http://xaa83d83.natappfree.cc';
+        const URL_1ST = 'http://w869e678.natappfree.cc';
         const URL_2ND = 'https://cy-dogear.github.io/dot2dot/helpme.html';
         const URL_3RD = './index.html';
 
@@ -85,6 +86,7 @@
         // 保存最后一次错误信息
         let lastError = '';
         
+        // checkUrl()是被主函数调用的核心函数
         async function checkUrl(url, verifyString) {
             updateStatus(`🔍 检测: ${url}`);
             
@@ -129,6 +131,7 @@
             }
         }
         
+        // 下面是主函数
         (async function() {
             const LOOP_MAX = 3;
             

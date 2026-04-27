@@ -14,10 +14,10 @@
             font-family: system-ui, sans-serif;
         }
         .container { text-align: center; padding: 2rem; }
-        .big-text { font-size: 3rem; font-weight: 600; color: #2c5f2d; }
-        .countdown { font-size: 1.2rem; color: #666; margin-top: 1rem; }
-        .status { font-size: 0.9rem; color: #999; margin-top: 1rem; }
-        .retry-info { font-size: 0.85rem; color: #c0392b; margin-top: 0.5rem; }
+        .big-text { font-size: 2rem; font-weight: 600; color: #2c5f2d; }
+        .countdown { font-size: 1rem; color: #666; margin-top: 1rem; }
+        .status { font-size: 1rem; color: #999; margin-top: 1rem; }
+        .retry-info { font-size: 1rem; font-weight: 600; color: #2c5f2d; margin-top: 0.5rem; }
     </style>
 
     <!-- ========== SEO / 机器检索增强 ========== -->
@@ -104,7 +104,7 @@
                 
                 if (!response.ok) {
                     lastError = `HTTP ${response.status}`;
-                    updateStatus(`❌ ${lastError}`);
+                    updateStatus(`✕  ${lastError}`);
                     return false;
                 }
                 
@@ -122,10 +122,10 @@
             } catch (err) {
                 if (err.name === 'AbortError') {
                     lastError = '请求超时 (5秒)';
-                    updateStatus(`❌ ${lastError}`);
+                    updateStatus(`✕  ${lastError}`);
                 } else {
                     lastError = err.message;
-                    updateStatus(`❌ ${lastError}`);
+                    updateStatus(`✕  ${lastError}`);
                 }
                 return false;
             }
@@ -162,7 +162,7 @@
                 }
                 
                 // 检测失败：显示详细信息
-                updateRetryInfo(`❌ 第 ${loop + 1} 次检测失败: ${lastError}`);
+                updateRetryInfo(`✕  第 ${loop + 1} 次检测失败: ${lastError}`);
                 
                 // 如果不是最后一次，等待后继续
                 if (loop < LOOP_MAX - 1) {

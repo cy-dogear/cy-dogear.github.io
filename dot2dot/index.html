@@ -166,7 +166,7 @@
                 
                 // 如果不是最后一次，等待后继续
                 if (loop < LOOP_MAX - 1) {
-                    updateRetryInfo(`⚠️ 建议点击“Manual Reset”以强制跳转 (${loop + 1}/${LOOP_MAX})`);
+                    updateRetryInfo(`⚠️ 建议点击“Manual Reset”以强制跳转 ... (${loop + 1}/${LOOP_MAX})`);
                     await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
                 }
             }

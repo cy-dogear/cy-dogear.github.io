@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>dogear · 工作与思考</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f7fb;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #1e2a3e;
+            padding: 2rem 1rem;
+        }
+
+        /* 卡片式容器，模拟阅读器优雅效果 */
+        .page {
+            max-width: 880px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            padding: 2rem 2rem 2.8rem;
+            transition: all 0.2s;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            .page {
+                padding: 1.5rem;
+                border-radius: 24px;
+            }
+        }
+
+        /* 头部昵称 + 主页链接区域 */
+        .identity {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.75rem;
+            border-bottom: 2px solid #eef2f6;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        .nickname {
+            font-size: 1.7rem;
+            font-weight: 640;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #1f3b4c, #2c5a6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .home-link {
+            background: #f0f4f9;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .home-link a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2c6b7e;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .home-link a:hover {
+            color: #0f4b5e;
+            text-decoration: underline;
+        }
+
+        /* 引用块风格 ———— 呼应原始 ❞ 风格 */
+        .quote-block {
+            margin: 1.8rem 0 1.2rem;
+            padding: 0.2rem 0 0.2rem 1.5rem;
+            border-left: 4px solid #a9c9d9;
+            background: #fafcfe;
+            border-radius: 0 20px 20px 0;
+        }
+        .quote-symbol {
+            font-size: 2rem;
+            font-family: 'Georgia', serif;
+            color: #8aaec0;
+            line-height: 1;
+            margin-right: 0.25rem;
+            vertical-align: middle;
+            display: inline-block;
+        }
+        .quote-text {
+            font-size: 1.1rem;
+            font-weight: 470;
+            color: #1f3e48;
+            margin: 0.5rem 0 0.2rem;
+            line-height: 1.5;
+        }
+        .first-quote .quote-text {
+            font-weight: 500;
+        }
+
+        /* 链接列表区域 干净整洁 */
+        .links-list {
+            margin: 1.5rem 0 1rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .link-item {
+            display: inline-block;
+        }
+        .pdf-link {
+            background: #f1f6fa;
+            padding: 0.55rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            color: #1f6c85;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #dfe9ef;
+            font-size: 0.95rem;
+        }
+        .pdf-link:hover {
+            background: #e3edf4;
+            border-color: #bbd3e0;
+            color: #0c556b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+        .pdf-link:active {
+            transform: translateY(1px);
+        }
+
+        /* 第二处 ❞ 笛卡尔名言 */
+        .second-quote {
+            margin-top: 2.5rem;
+        }
+        .cogito {
+            font-style: normal;
+        }
+
+        /* 图片容器 — 保持原始比例且带温和圆角，响应式 */
+        .image-wrapper {
+            margin: 2rem 0 1rem;
+            text-align: center;
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .image-wrapper img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 20px;
+            transition: transform 0.2s;
+        }
+        .image-wrapper img:hover {
+            transform: scale(1.01);
+        }
+
+        /* 分割小点缀 优雅 */
+        .spacer {
+            height: 0.5rem;
+        }
+
+        /* 页脚署名装饰 */
+        .footnote {
+            margin-top: 2.2rem;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #89a7b8;
+            border-top: 1px solid #ecf2f7;
+            padding-top: 1.5rem;
+        }
+
+        /* 针对原始特殊符号表现 */
+        .inline-quote-mark {
+            font-size: 1.6rem;
+            font-family: 'Times New Roman', serif;
+            line-height: 1;
+            margin-right: 0.2rem;
+            vertical-align: middle;
+            color: #7fa1b3;
+        }
+        hr {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <!-- 头部：昵称 + 主页链接 -->
+    <div class="identity">
+        <div class="nickname">🐾 dogear</div>
+        <div class="home-link">
+            <a href="https://cy-dogear.github.io/" target="_blank" rel="noopener noreferrer">
+                <span>🏠</span> cy-dogear.github.io
+            </a>
+        </div>
+    </div>
+
+    <!-- 第一个 ❞ 段落：上班对一个人的价值...... -->
+    <div class="quote-block first-quote">
+        <div class="quote-text">
+            <span class="quote-symbol">❞</span> 
+            上班对一个人的价值，可大可小；工作对一个人的价值，恒定恒久。
+        </div>
+    </div>
+
+    <!-- 两个PDF链接 (延续原有结构) -->
+    <div class="links-list">
+        <div class="link-item">
+            <a href="https://maipdf.cn/file/at69d6f5e7ad6f8/pdf" class="pdf-link" target="_blank" rel="noopener noreferrer">
+                📄 阅读和下载《01 这样做芯片产品规划》（上册）
+            </a>
+        </div>
+        <div class="link-item">
+            <a href="https://maipdf.cn/file/at69d6eae6756e8/pdf" class="pdf-link" target="_blank" rel="noopener noreferrer">
+                📘 阅读和下载《03 营销理念归属企业管理理念》
+            </a>
+        </div>
+    </div>
+
+    <!-- 第二个 ❞ 我思故我在 -->
+    <div class="quote-block second-quote">
+        <div class="quote-text cogito">
+            <span class="quote-symbol">❞</span> 
+            我思故我在。
+        </div>
+    </div>
+    
+    <!-- 图片展示: 原始 peaDJ1g.png 链接 (图床原样) -->
+    <div class="image-wrapper">
+        <img src="https://s41.ax1x.com/2026/04/09/peaDJ1g.png" 
+             alt="dogear 配图 - 思考或芯片相关意象" 
+             loading="lazy"
+             onerror="this.style.opacity='0.6'; this.alt='图片加载失败，但意境犹在';">
+    </div>
+
+    <!-- 极简装饰脚注，致敬笛卡尔和产品思维，不完全多余但保留干净气息 -->
+    <div class="footnote">
+        <span>✧ 工作与思考，恒久如常 ✧</span>
+    </div>
+</div>
+
+<!-- 附加微小脚本确保外部链接安全性 (已经是rel) 无侵入 -->
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Dot2Dot · 产品文档 | 中英文目录导航</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8fafc;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Noto Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #0f2b36;
+            padding: 2.5rem 1.2rem;
+        }
+
+        /* 主容器，文档卡片风格 */
+        .document {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+            padding: 2.4rem 2rem 3rem;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 1rem;
+            }
+            .document {
+                padding: 1.6rem;
+                border-radius: 28px;
+            }
+        }
+
+        /* 目录区域精致样式 */
+        .toc {
+            background: #f1f6fc;
+            border-radius: 28px;
+            padding: 1.4rem 1.8rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #e2edf4;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .toc-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            color: #1c5d74;
+            margin-bottom: 1rem;
+            border-left: 4px solid #2b95b3;
+            padding-left: 0.85rem;
+        }
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .toc-list li {
+            font-size: 1rem;
+        }
+        .toc-list a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #226f8a;
+            background: #ffffffcc;
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            transition: all 0.2s ease;
+            display: inline-block;
+            border: 1px solid transparent;
+        }
+        .toc-list a:hover {
+            background: #ffffff;
+            color: #0d4f64;
+            border-color: #bdddee;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            transform: translateX(3px);
+        }
+
+        /* 章节标题样式 */
+        h1, .chapter-head {
+            font-size: 1.9rem;
+            font-weight: 650;
+            margin-top: 2rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 3px solid #dcebf2;
+            color: #1f5f76;
+            letter-spacing: -0.3px;
+        }
+        h2, .subheading {
+            font-size: 1.45rem;
+            font-weight: 590;
+            margin: 1.8rem 0 0.8rem 0;
+            color: #2a6f89;
+            padding-left: 0.4rem;
+            border-left: 4px solid #9fcbd9;
+            padding-top: 0.1rem;
+        }
+
+        /* 预留占位内容样式 (保留内容结构, 占位但优雅) */
+        .placeholder-desc {
+            background: #fefef7;
+            border-radius: 24px;
+            padding: 1rem 1.4rem;
+            margin: 0.75rem 0 1rem 0;
+            border: 1px dashed #cbdde6;
+            color: #4d6f7e;
+            font-style: normal;
+            font-weight: 440;
+            transition: 0.1s;
+        }
+        .placeholder-desc::before {
+            content: "📌 ";
+            font-weight: 500;
+            color: #4f9ab3;
+        }
+
+        /* 返回目录链接样式 */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin: 2rem 0 1rem 0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: #eff4f9;
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #31748f;
+            transition: all 0.2s;
+            border: 1px solid #d9e6f0;
+        }
+        .back-link:hover {
+            background: #e6eff6;
+            color: #135b74;
+            transform: translateY(-1px);
+            border-color: #bdd2e0;
+        }
+        hr {
+            display: none;
+        }
+
+        /* 隐藏锚点辅助滚动 (不影响视觉) */
+        .anchor-offset {
+            scroll-margin-top: 1.2rem;
+        }
+
+        /* 中英文分割看着干净 */
+        .lang-section {
+            margin-top: 1rem;
+        }
+        .section-spacer {
+            margin-top: 1rem;
+        }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #8bafc0;
+            border-top: 1px solid #ecf3f8;
+            padding-top: 1.8rem;
+        }
+        .small-note {
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+<div class="document">
+    <!-- 目录 block，包含两个主要锚点链接: 英文说明 + 中文说明 -->
+    <div class="toc">
+        <div class="toc-title">📖 目录 · Contents</div>
+        <ul class="toc-list">
+            <li><a href="#c1">📘 Dot2Dot Readme in English</a></li>
+            <li><a href="#c2">📙 Dot2Dot Readme 中文说明</a></li>
+        </ul>
+        <!-- 隐藏锚点 #back 位于目录末尾，符合原始设计: 返回目录的锚点定位点 -->
+        <span id="back" style="display: block; height: 0; visibility: hidden;"></span>
+    </div>
+
+    <!-- ================= 英文部分 ================= -->
+    <div class="lang-section" id="c1">
+        <h1 class="anchor-offset" id="c1_main">Dot2Dot Readme in English</h1>
+        
+        <h2 id="eng-prod-desc">1 &nbsp; Product Description</h2>
+        <div class="placeholder-desc">
+            Product description area — detailed content regarding Dot2Dot’s core functionality, 
+            user scenarios, and technical highlights will be elaborated here. 
+            (Expansion in progress)
+        </div>
+        <p>
+1 This is a social platform created by Chinese people, but it is not exclusive to Chinese users.<br>
+1.1 The content you post here will be semantically analyzed by AI and then randomly weighted for discovery and recommendation.<br>
+1.2 It can analyze Chinese, English, Russian, and even smaller languages.<br>
+1.3 Anyone can use it, and anyone has a chance to find people who share their interests and values here.<br>
+<br>
+2 User registration requires an email address, which is displayed by default on the user’s profile.<br>
+2.1 By using this old-fashioned, non-real-time method of contact, we want users to feel more secure.<br>
+2.2 Want to use other ways to get in touch? Feel free to share them peer-to-peer yourself.<br>
+2.3 Don’t want to disclose your email at all? Then this place might not be for you.<br>
+<br>
+3 The slogan is: “To find the dot-to-dot connection, to see a spiritual way of life.”<br>
+3.1 Dot2Dot is a dating APP ... (❌)<br>
+3.2 Dot2Dot is similar to BBS function ... (❌)<br>
+3.3 Here I can demonstrate my spiritual life ... (✅)<br>
+3.4 Here I want “Resonant People” to contact me via email ... (✅)<br>            
+        </p>
+
+        <h2 id="eng-position">2 &nbsp; Positioning</h2>
+        <div class="placeholder-desc">
+            Market positioning and target audience analysis. Dot2Dot serves as a bridge between 
+            data processing and human-centric design. Unique value proposition and differentiation 
+            strategy will be covered in this section.
+        </div>
+
+        <h2 id="eng-concept">3 &nbsp; Concept Design</h2>
+        <div class="placeholder-desc">
+            Concept design principles, interaction flow, and architectural thinking behind Dot2Dot. 
+            Emphasizing modularity, scalability and intuitive experience. (Further documentation incoming)
+        </div>
+
+        <!-- 返回目录链接 + 保持原始锚点 back 定位 -->
+        <div class="back-link-wrapper">
+            <a href="#back" class="back-link">↑ 返回目录 · Back to Contents</a>
+        </div>
+    </div>
+
+    <!-- 分割视觉留白 -->
+    <div style="height: 1rem;"></div>
+    
+    <!-- ================= 中文部分 ================= -->
+    <div class="lang-section" id="c2">
+        <h1 class="anchor-offset" id="c2_main">Dot2Dot Readme 中文说明</h1>
+
+        <h2 id="cn-prod-desc">1 &nbsp; 产品描述</h2>
+        <div class="placeholder-desc">
+            产品描述区域 — 详细介绍 Dot2Dot 的核心功能、使用场景和技术亮点。 
+            致力于提供轻量且高效的连接方案，优化工作流与数据交互。
+        </div>
+
+        <h2 id="cn-position">2 &nbsp; 产品定位</h2>
+        <div class="placeholder-desc">
+            产品定位与目标用户分析。Dot2Dot 定位于解决分布式节点间的智能联动问题，
+            服务开发者与产品团队，强调无感集成与可扩展性。
+        </div>
+
+        <h2 id="cn-design">3 &nbsp; 设计举措</h2>
+        <div class="placeholder-desc">
+            设计举措涵盖交互原则、架构方法论及产品迭代思路。围绕低耦合、高内聚的设计范式，
+            确保 Dot2Dot 在多变场景下保持稳定与灵活。
+        </div>
+
+        <!-- 返回目录链接，同样指向隐藏的 #back 锚点 -->
+        <div class="back-link-wrapper">
+            <a href="#back" class="back-link">↑ 返回目录 · 返回顶部目录</a>
+        </div>
+    </div>
+
+    <footer>
+        <span>Dot2Dot · 产品文档 | 支持双向目录导航</span>
+    </footer>
+</div>
+
+<!-- 确保点击返回目录时滚动平滑 + 隐藏锚点位于目录区底部，定位精准 -->
+<script>
+    (function() {
+        // 为所有目录中的锚点链接添加平滑滚动 (以及返回链接)
+        const allInternalLinks = document.querySelectorAll('a[href^="#"]');
+        allInternalLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href').substring(1);  // 去掉 '#'
+                if (!targetId) return;
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    // 平滑滚动 + 适当偏移 (避免固定顶栏挤压, 由于没有固定header，偏移20px足够优雅)
+                    const offset = 20;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    window.scrollTo({
+                        top: elementPosition - offset,
+                        behavior: 'smooth'
+                    });
+                    // 可选: 更新url hash但不触发强烈跳动
+                    history.pushState(null, null, `#${targetId}`);
+                }
+            });
+        });
+
+        // 若页面加载时有hash锚点，自动滚动定位 (保证直接访问 c1/c2 时表现良好)
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const target = document.getElementById(hash);
+            if (target) {
+                setTimeout(() => {
+                    const offset = 20;
+                    const elementPos = target.getBoundingClientRect().top + window.pageYOffset;
+                    window.scrollTo({
+                        top: elementPos - offset,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+        }
+    })();
+</script>
+</body>
+</html>

@@ -1,9 +1,14 @@
-目录
+目录 | Contents
 
-<span id="back"></span>  <!- 在目录末尾加一个隐藏锚点 ->
+1. 产品描述 | Product Description
+2. 产品定位 | Product Positioning
+3. 设计举措 | Concept Design
+4. 总结 | Summary
 
 - [Dot2Dot Readme in English](#c1)
 - [Dot2Dot Readme 中文说明](#c2)
+
+Dot2Dot初始设计已实现在：https://cy-dogear.github.io/dot2dot/
 
 --
 
@@ -27,23 +32,41 @@ The slogan is: “**To find the dot-to-dot connection, to see a spiritual way of
 - Here I want “Resonant People” to contact me via email ... (✅)
 
 ## 3	Concept Design
+The measures for achieving product positioning are divided into two areas.
 
---
+### 3.1 The first is reduction: eliminating product features and capabilities that are not highly relevant to the core functionality and product positioning.
+
+### 3.2 The second is the implementation of an AI-driven screening mechanism that ensures quality content is presented first.
+
+## 4	Summary
+The initial design of Dot2Dot has been implemented at: https://cy-dogear.github.io/dot2dot/
+
+It is characterized by three principles: Ethical • Slow-paced • Lightweight.
+
+As previously outlined, the measures to achieve its product positioning fall into two aspects:
+
+- Subtraction: Removing features and performance elements not closely related to its core functionality and positioning.
+
+- AI-driven Filtering: Using an AI-powered screening mechanism to prioritize quality content.
+
+AI semantic parsing and filtering algorithms serve as the technical means to realize this product positioning.
+
+---
 [返回目录](#back)
 
 # <span id="c2">Dot2Dot Readme 中文说明</span>
 ## 1	产品描述
-1.1 Dot2Dot项目缘起：
+### 1.1 Dot2Dot项目缘起：
 - 我反感注意力经济的弊端，然并卵。那些社交平台在此潮流里采取纵容的态度；为了挣钱，不寒碜。可是，真善美在与假恶丑的博弈中，式微。
 - 好在来到2025年，我们能用上AI啦。本平台的最大特点是用AI解析用户发布内容，把价值观认同的内容更高概率的展示出来。
 - 然而，本平台没打算做“价值观暴君”，没有禁止那些不被鼓励的用户内容，只以概率区别对待。
 - 当湖水还浅的时候，您能看到湖底的岩石；随着源头活水越来越多流入，您将看到一湖海蓝！
 
-1.2 想做成这样的交友平台：有道德、慢车马、轻量化。
+### 1.2 想做成这样的交友平台：有道德、慢车马、轻量化。
 - 不禁止特定信息，但调用AI解析语义，将价值观不符的信息往下沉、少展示。这是概率问题。
 - 禁用图片展示，这样可从源头上大幅减少诱惑。在算法上鼓励以兴趣爱好为纽带建立点对点连接，但这里只是起点，走向哪里靠个人，靠缘分。别急着得到什么，我们就能大幅免疫。
 
-1.3 主要特征：利用具备持续升级能力的AI调用方法去筛选用户权重和内容权重。
+### 1.3 主要特征：利用具备持续升级能力的AI调用方法去筛选用户权重和内容权重。
 
 
 ## 2	产品定位
@@ -58,7 +81,7 @@ The slogan is: “**To find the dot-to-dot connection, to see a spiritual way of
 本平台要有道德操守，不为谋利而纵容人性贪嗔痴，不追求用户留存、活跃度，追求"对用户有用" —— 用户觉得有用，用完离开了，也是平台的价值（欢迎再来，这里不设门槛）。
 
 ## 3	设计举措
-**3.1** 要实现产品定位，首先是做减法，砍掉与核心功能和产品定位不甚相关的产品功能和性能。
+### **3.1** 要实现产品定位，首先是做减法，砍掉与核心功能和产品定位不甚相关的产品功能和性能。
 * 不显示关注或被关注列表，不显示性别、年龄、头像、职业，不具备留言和评论功能。不支持图片和视频格式的广播信息，只有纯字符。不支持聊天功能。
 	- Dot2Dot是以兴趣爱好为纽带建立点对点连接的平台，不需要那些附加的功能，在这里，兴趣爱好是入口，其它的事请用户自己安排“点对点”沟通。
 
@@ -77,8 +100,30 @@ The slogan is: “**To find the dot-to-dot connection, to see a spiritual way of
 * 鼓励“点对点”联系方式。默认联系方式： 用户注册信息是 Email，展示在用户主页。
 	- 用Email这种古早的、非实时的联系方式，让用户觉得安全些。想用别的联系方式？点对点的自己给。连Email也不想公布？那就不用上平台来发布信息了。
 
+### **3.2** 接着是用一套以AI赋能的筛选机制，让好内容优先呈现，实现「找得到点对点的连接，看得见精神生活内容」。
+（相关细节可参考此目录：./design-record-doc，以下是目录）
+- 内容标签（Message_tag）机制
+- 用户标签（User_tag）机制
+- 内容标签和用户标签生成的过程
+- 用户权重（User_weight）
+- 发现与匹配机制
+- 与定位措施相配的数据结构和用户界面设计
 
-**3.2** 接着是用一套以AI赋能的筛选机制，让好内容优先呈现，实现「找得到点对点的连接，看得见精神生活内容」。
+（从用户发布广播到平台筛选呈现的算法步骤，请见下图）
+[![peII6kq.png](https://s41.ax1x.com/2026/04/29/peII6kq.png)](https://imgchr.com/i/peII6kq)
+
+## 4	总结
+- Dot2Dot是交友平台，
+- 利用具备持续升级能力的AI调用方法去筛选用户权重和内容权重，
+- 在中英文互联网上，区别于那些默许或纵容擦边、成瘾机制、表演压力和轻度伤害内容的交友和泛社交平台，
+- 最适合需要“点对点的兴趣交友”且注重健康价值观的人群。
+
+Dot2Dot初始设计已实现在：https://cy-dogear.github.io/dot2dot/
+
+它的特点是：有道德 • 慢车马 • 轻量化 ；
+AI语义解析和筛选算法是实现产品定位的技术手段。
+
+[![peII7A1.png](https://s41.ax1x.com/2026/04/29/peII7A1.png)](https://imgchr.com/i/peII7A1)
 
 --
 [返回目录](#back)

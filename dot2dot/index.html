@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Dot2Dot Checking...</title>
+    <title>Dot2Dot</title>
     <style>
         body {
             margin: 0;
@@ -50,10 +50,6 @@
         <div class="status" id="status"></div>
         <div class="retry-info" id="retryInfo"></div>
         
-        <br>
-        <a id="directReload" rel="noopener noreferrer" >☞ Manual Reset</a><br>
-        <a>or</a><br>
-        <a href="https://cy-dogear.github.io/dot2dot/helpme.html" rel="noopener noreferrer" >☞ Goto Help</a>
     </div>
 
     <script>
@@ -62,122 +58,8 @@
         const URL_2ND = './source/helpme.html';
         const URL_3RD = './index.html';
 
-        const VERIFY_1 = 'not found';
-        const VERIFY_2 = 'Dot2Dot-Login-Page-Check';
-        
-        const FETCH_TIMEOUT = 3000;      // 5秒超时
-        const RETRY_DELAY = 3000;        // 重试间隔
+        window.location.href = URL_1ST;
 
-        // ==================== 配置结束 ====================
-
-        const statusEl = document.getElementById('status');
-        const retryInfoEl = document.getElementById('retryInfo');
-        
-        function updateStatus(msg) {
-            if (statusEl) statusEl.textContent = msg;
-            console.log(msg);
-        }
-        
-        function updateRetryInfo(msg) {
-            if (retryInfoEl) retryInfoEl.textContent = msg;
-            console.log(msg);
-        }
-        
-        // 保存最后一次错误信息
-        let lastError = '';
-        
-        // checkUrl()是被主函数调用的核心函数
-        async function checkUrl(url, verifyString) {
-            updateStatus(`🔍 检测: ${url}`);
-            
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
-                
-                const response = await fetch(url, {
-                    method: 'GET',
-                    signal: controller.signal,
-                    cache: 'no-store'
-                });
-                
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    lastError = `HTTP ${response.status}`;
-                    updateStatus(`✕  ${lastError}`);
-                    return false;
-                }
-                
-                const html = await response.text();
-                const isValid = html.includes(verifyString);
-                
-                if (!isValid) {
-                    lastError = `未找到验证字符串 "${verifyString.substring(0, 30)}..."`;
-                    updateStatus(`⚠️ ${lastError}`);
-                } else {
-                    updateStatus(`✅ 验证通过`);
-                }
-                return isValid;
-                
-            } catch (err) {
-                if (err.name === 'AbortError') {
-                    lastError = '请求超时 (5秒)';
-                    updateStatus(`✕  ${lastError}`);
-                } else {
-                    lastError = err.message;
-                    updateStatus(`✕  ${lastError}`);
-                }
-                return false;
-            }
-        }
-        
-        // 下面是主函数
-        (async function() {
-            const LOOP_MAX = 3;
-            
-            // 设置 Manual Reset 链接
-            document.getElementById('directReload').href = URL_1ST;
-            
-            for (let loop = 0; loop < LOOP_MAX; loop++) {
-                // 显示当前尝试次数
-                updateRetryInfo(`🔄 尝试次数: ${loop + 1} / ${LOOP_MAX}`);
-                updateStatus(`🔍 第 ${loop + 1} 次检测...`);
-                
-                // 检测 verify1 (not found)
-                const isNotFound = await checkUrl(URL_1ST, VERIFY_1);
-                if (isNotFound) {
-                    updateStatus(`✅ 检测到服务异常标识，跳转备用页面`);
-                    updateRetryInfo('');
-                    window.location.href = URL_2ND;
-                    return;
-                }
-                
-                // 检测 verify2 (正常标识)
-                const isValid = await checkUrl(URL_1ST, VERIFY_2);
-                if (isValid) {
-                    updateStatus(`✅ 检测到正常标识，跳转目标服务`);
-                    updateRetryInfo('');
-                    window.location.href = URL_1ST;
-                    return;
-                }
-                
-                // 检测失败：显示详细信息
-                updateRetryInfo(`✕  第 ${loop + 1} 次检测失败: ${lastError}`);
-                
-                // 如果不是最后一次，等待后继续
-                if (loop < LOOP_MAX - 1) {
-                    updateRetryInfo(`⚠️ 建议点击“Manual Reset”以强制跳转 ... (${loop + 1}/${LOOP_MAX})`);
-                    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-                }
-            }
-                
-            updateRetryInfo(`⚠️ You're recommended to click "Manual Reset" ... (${LOOP_MAX}/${LOOP_MAX})`);
-            
-            // 循环结束，所有尝试均失败，跳转 URL2之间再DELAY最后一次
-            setTimeout(() => {
-                window.location.href = URL_2ND;
-            }, RETRY_DELAY);
-        })();
     </script>
 </body>
 </html>

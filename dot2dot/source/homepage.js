@@ -1,5 +1,5 @@
 // homepage.js
-// Dot2Dot 主页模块 - 从 JSONBin 读取数据，只负责动态内容填充
+// Dot2Dot 主页模块 - localStorage 缓存版（只负责动态内容填充）
 
 // ========== 配置区域 ==========
 const USERS_BIN_ID = '69f14522856a6821898445a4'
@@ -7,12 +7,24 @@ const MESSAGES_BIN_ID = '69f152d436566621a802f2ba'
 const JSONBIN_MASTER_KEY = '$2a$10$NnXwFiHdeGX5Q4Gv9IigV..OROpZWRDPiLvnGapCf4fX4Io7VIQVq'
 // ==============================
 
+// localStorage 键名
+const STORAGE_KEYS = {
+    USERS: 'dot2dot_users',
+    MESSAGES: 'dot2dot_messages',
+    CURRENT_USER: 'dot2dot_currentUser',
+    TIMESTAMP: 'dot2dot_timestamp'
+}
+
+// 缓存有效期（1小时 = 3600000 毫秒）
+const CACHE_DURATION = 60 * 60 * 1000
+
 // 全局变量
 let allUsers = []
 let allMessages = []
 let currentUserId = null
 let currentUserInfo = null
 let isGuest = false
+let currentView = 'platform'  // 'platform' or 'me'
 
 // ========== 工具函数 ==========
 function getUrlParam(param) {
@@ -56,10 +68,63 @@ async function fetchMessages() {
     return data.record || []
 }
 
-async function loadAllData() {
+// 从 localStorage 加载数据
+function loadFromLocalStorage() {
+    const usersJson = localStorage.getItem(STORAGE_KEYS.USERS)
+    const messagesJson = localStorage.getItem(STORAGE_KEYS.MESSAGES)
+    const timestamp = localStorage.getItem(STORAGE_KEYS.TIMESTAMP)
+    
+    if (!usersJson || !messagesJson || !timestamp) {
+        return false
+    }
+    
+    const age = Date.now() - parseInt(timestamp)
+    if (age >= CACHE_DURATION) {
+        console.log('localStorage 缓存已过期')
+        return false
+    }
+    
+    try {
+        allUsers = JSON.parse(usersJson)
+        allMessages = JSON.parse(messagesJson)
+        console.log(`从 localStorage 加载数据: ${allUsers.length} 用户, ${allMessages.length} 广播`)
+        return true
+    } catch (e) {
+        console.warn('解析 localStorage 数据失败:', e)
+        return false
+    }
+}
+
+// 从 JSONBin 加载数据（并更新 localStorage）
+async function loadFromJSONBin() {
+    console.log('从 JSONBin 加载数据...')
     const [users, messages] = await Promise.all([fetchUsers(), fetchMessages()])
+    
+    if (!Array.isArray(users) || users.length === 0) {
+        throw new Error('用户数据异常')
+    }
+    
     allUsers = users
     allMessages = messages
+    
+    // 更新 localStorage
+    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users))
+    localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(messages))
+    localStorage.setItem(STORAGE_KEYS.TIMESTAMP, Date.now().toString())
+    console.log('数据已存入 localStorage')
+    
+    return true
+}
+
+// 加载数据（优先缓存，过期或无效则请求 JSONBin）
+async function loadAllData() {
+    // 先尝试从 localStorage 加载
+    if (loadFromLocalStorage()) {
+        return true
+    }
+    
+    // 缓存无效，从 JSONBin 加载
+    await loadFromJSONBin()
     return true
 }
 
@@ -434,8 +499,6 @@ function handleRelatedLinkClick(e) {
 }
 
 // ========== 视图切换 ==========
-let currentView = 'platform'
-
 function setView(view) {
     if (isGuest && view === 'me') return
     
@@ -451,6 +514,7 @@ function setView(view) {
         if (meView) meView.style.display = 'none'
         if (platformNav) platformNav.classList.add('active')
         if (meNav) meNav.classList.remove('active')
+        renderPlatformList()
     } else {
         if (platformView) platformView.style.display = 'none'
         if (meView) meView.style.display = 'block'
@@ -541,6 +605,29 @@ function setupGuestMode() {
 // ========== 初始化 ==========
 async function init() {
     try {
+        // 获取 URL 参数
+        const mode = getUrlParam('mode')
+        isGuest = (mode === 'guest')
+        
+        if (!isGuest) {
+            // 获取当前用户
+            currentUserId = getUrlParam('user')
+            
+            // 检查 localStorage 中的当前用户
+            const cachedCurrentUser = localStorage.getItem(STORAGE_KEYS.CURRENT_USER)
+            if (cachedCurrentUser && !currentUserId) {
+                const user = JSON.parse(cachedCurrentUser)
+                currentUserId = user.user_id
+                currentUserInfo = user
+            }
+            
+            if (!currentUserId) {
+                console.warn('未找到用户信息，跳转到登录页')
+                window.location.href = './login.html'
+                return
+            }
+        }
+        
         // 显示加载状态
         const platformList = document.getElementById('platform-list')
         if (platformList) platformList.innerHTML = '<div class="loading">加载中...</div>'
@@ -548,16 +635,9 @@ async function init() {
         // 加载数据
         await loadAllData()
         
-        // 判断访客模式
-        const mode = getUrlParam('mode')
-        isGuest = (mode === 'guest')
-        
-        // 获取当前用户
-        if (!isGuest) {
-            currentUserId = getUrlParam('user')
-            if (currentUserId) {
-                currentUserInfo = allUsers.find(u => u.user_id === currentUserId)
-            }
+        // 获取当前用户完整信息（如果未从缓存获取到）
+        if (!isGuest && !currentUserInfo) {
+            currentUserInfo = allUsers.find(u => u.user_id === currentUserId)
             if (!currentUserInfo && allUsers.length > 0) {
                 currentUserId = allUsers[0].user_id
                 currentUserInfo = allUsers[0]
@@ -589,15 +669,6 @@ async function init() {
         const viewParam = getUrlParam('view')
         const initialView = (viewParam === 'me' && !isGuest) ? 'me' : 'platform'
         
-        // 初始渲染
-        if (initialView === 'platform') {
-            renderPlatformList()
-        } else {
-            renderUserInfo()
-            renderUserTags()
-            renderMeBroadcastsList()
-        }
-        
         // 设置视图显示状态
         const platformView = document.getElementById('platform-view')
         const meView = document.getElementById('me-view')
@@ -614,6 +685,17 @@ async function init() {
         if (meNav) {
             if (initialView === 'me') meNav.classList.add('active')
             else meNav.classList.remove('active')
+        }
+        
+        // 渲染初始视图
+        if (initialView === 'platform') {
+            currentView = 'platform'
+            renderPlatformList()
+        } else {
+            currentView = 'me'
+            renderUserInfo()
+            renderUserTags()
+            renderMeBroadcastsList()
         }
         
         // 绑定事件

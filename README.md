@@ -1,9 +1,18 @@
-昵称：dogear ；主页：[https://cy-dogear.github.io/](https://cy-dogear.github.io/)
+Nickname: dogear ;
 
-我在这里「玩」两件事：
+Repo root: [https://github.com/cy-dogear](https://github.com/cy-dogear) ;
 
-## * 一部分个人写作
-—— 目录是 `(repo root)/writing` ← [click here to visit](https://github.com/cy-dogear/writing)
+Homepage: [https://cy-dogear.github.io](https://cy-dogear.github.io) ;
 
-## * 一个轻量交友平台
-—— 目录是 `(repo root)/dot2dot` ← [click here to visit](https://github.com/cy-dogear/dot2dot)
+
+# 我在这里「玩」两件事：
+
+## ✓ 一部分个人写作
+-  `(repo root)/writing`  [→ https://github.com/cy-dogear/writing](https://github.com/cy-dogear/writing)
+
+- Homepage: [https://cy-dogear.github.io/writing](https://cy-dogear.github.io/writing)
+
+
+## ✓ 一个轻量交友平台
+- `(repo root)/dot2dot`  [→ https://github.com/cy-dogear/dot2dot](https://github.com/cy-dogear/dot2dot)
+- Homepage: [https://cy-dogear.github.io/dot2dot](https://cy-dogear.github.io/dot2dot)

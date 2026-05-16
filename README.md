@@ -21,12 +21,12 @@ I am playing with the following projects...
 
 
 ## ✓ Minimal Markdown Editor
--  `How to & Why me`  [→ https://github.com/cy-dogear/writing/tool-introduction.html](https://github.com/cy-dogear/writing/tool-introduction.html)
+-  `How to & Why me`  [→ https://cy-dogear.github.io/writing/tool-introduction.html](https://cy-dogear.github.io/writing/tool-introduction.html)
 
 - Homepage: [→ https://cy-dogear.github.io/writing/mini-MD.html](https://cy-dogear.github.io/writing/mini-MD.html)
 
 
 ## ✓ 常用字符串（写作辅助工具）
--  `How to & Why me`  [→ https://github.com/cy-dogear/writing/tool-introduction.html](https://github.com/cy-dogear/writing/tool-introduction.html)
+-  `How to & Why me`  [→ https://cy-dogear.github.io/writing/tool-introduction.html](https://cy-dogear.github.io/writing/tool-introduction.html)
 
 - Homepage: [→ https://cy-dogear.github.io/writing/frequent-char.html](https://cy-dogear.github.io/writing/frequent-char.html)

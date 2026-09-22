@@ -44,7 +44,7 @@ Positioning: **“To find the dot‑to‑dot connection, to see a spiritual way 
 
 没有在应用市场找到这样的轻量 APP（APK 小于 5MB），所以我自己做出它。
 
-🔗  `How to & Why me`  [→ https://cy-dogear.github.io/writing/tool-introduction.html](https://cy-dogear.github.io/writing/tool-introduction.html)
+🔗  `How to & Why me`  [→ https://cy-dogear.github.io/soft-tool/cycling-timer/](https://cy-dogear.github.io/soft-tool/cycling-timer/)
 
 ## ✓ Minimal Markdown Editor
 一个“20kB”的轻量级输入中转站，用于带简易标记的纯文本初稿写作。

@@ -44,13 +44,13 @@ Positioning: **“To find the dot‑to‑dot connection, to see a spiritual way 
 
 没有在应用市场找到这样的轻量 APP（APK 小于 5MB），所以我自己做出它。
 
-🔗  `How to & Why me`  [→ https://cy-dogear.github.io/soft-tool/cycling-timer/](https://cy-dogear.github.io/soft-tool/cycling-timer/)
+🔗  `How to & Why me`  [→ https://cy-dogear.github.io/soft-tool/](https://cy-dogear.github.io/soft-tool/)
 
 ## ✓ Minimal Markdown Editor
 一个“20kB”的轻量级输入中转站，用于带简易标记的纯文本初稿写作。
 - Homepage: [→ https://cy-dogear.github.io/writing/mini-MD.html](https://cy-dogear.github.io/writing/mini-MD.html)
 
--  `How to & Why me`  [→ https://cy-dogear.github.io/writing/tool-introduction.html](https://cy-dogear.github.io/writing/tool-introduction.html)
+-  `How to & Why me`  [→ https://github.com/cy-dogear/soft-tool](https://github.com/cy-dogear/soft-tool)
 
 ## ✓ 常用字符串（写作辅助工具）
 适配 **“个人使用频率”** 和 **“个性使用习惯”** 的特殊字符输入工具

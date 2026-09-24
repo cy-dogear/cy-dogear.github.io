@@ -58,4 +58,5 @@ Positioning: **“To find the dot‑to‑dot connection, to see a spiritual way 
 适配 **“个人使用频率”** 和 **“个性使用习惯”** 的特殊字符输入工具
 
 - Homepage: [→ https://cy-dogear.github.io/writing/frequent-char.html](https://cy-dogear.github.io/writing/frequent-char.html)
+
 -  `How to & Why me`  [→ https://cy-dogear.github.io/writing/tool-introduction.html](https://cy-dogear.github.io/writing/tool-introduction.html)
